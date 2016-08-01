@@ -81,3 +81,30 @@ DS_hook_push( 'after_config' , 'function_to_call_2' , 10 );
 Done !
 The function_to_call_2() has a higher priority than function_to_call_1(), so function_to_call_2() will be called before function_to_call_1()
 
+### The full exemple
+```php
+// the function you want to call in last
+function function_to_call_1(){
+	var_dump('function_to_call_1() is called');
+}
+// the function you want to call in first
+function function_to_call_2(){
+	var_dump('function_to_call_2() is called');
+}
+
+// hooking the function function_to_call_1() with a priority at 1
+DS_hook_push( 'after_config' , 'function_to_call_1' , 1 );
+
+// hooking the function function_to_call_2() with a priority at 10
+DS_hook_push( 'after_config' , 'function_to_call_2' , 10 );
+
+
+// some code ...
+
+
+// call to your config file
+require 'path/to/your/config.php';
+
+// set a hook trigger
+DS_hook_trigger('after_config');
+```
