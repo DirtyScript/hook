@@ -54,7 +54,7 @@ function DS_hook_push($hook_name, $function, $priority = 10){
  * @return array, the returns of the functions to call 
  */
 function DS_hook_trigger($hook_name){
-	global $DS_hooks,;
+	global $DS_hooks;
 
 	$DS_hooks_return = array();
 
