@@ -21,7 +21,6 @@ need more test and improvements, so use it for fun/test/debug/small project...
  * @author    RemRem <remrem@dirty-script.com>
  * @copyright Copyright (C) dirty-script.com,  All rights reserved.
  * @licence   MIT
- * @version   0.01.000 beta
  * @link      Incoming
  * @link      https://github.com/DirtyScript/hook
  */
