@@ -68,6 +68,7 @@ function DS_hook_clean( $hook_name ){
  */
 function DS_hook_trigger($hook_name){
 	global $DS_hooks;
+<<<<<<< HEAD
 
 	if (!is_array($DS_hooks)){return false;}
 	if (!isset($DS_hooks[$hook_name])
@@ -76,6 +77,8 @@ function DS_hook_trigger($hook_name){
 	){
 		return true;
 	}
+=======
+>>>>>>> origin/master
 
 	$args = func_get_args();
 	$DS_hooks_return = array();
