@@ -1,6 +1,9 @@
 /**
  * CHANGELOG
  * 
+ * 0.02.002 2016-08-03
+ *  - DS_hook_trigger() will now return arguments in an array
+ *
  * 0.02.001 2016-08-03
  *  - add DS_hook_clean() for cleaning a hook by the hookname
  * 

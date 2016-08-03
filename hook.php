@@ -12,7 +12,7 @@
  * @author    RemRem <remrem@dirty-script.com>
  * @copyright Copyright (C) dirty-script.com,  All rights reserved.
  * @licence   MIT
- * @version   0.02.000 beta
+ * @version   0.03.000 beta
  * @link      Incoming
  * @link      https://github.com/DirtyScript/hook
  */
@@ -70,6 +70,7 @@ function DS_hook_trigger($hook_name){
 	global $DS_hooks;
 
 	if (!is_array($DS_hooks)){return false;}
+
 	if (!isset($DS_hooks[$hook_name])
 	 || !is_array($DS_hooks[$hook_name])
 	 || count($DS_hooks[$hook_name]) < 1
@@ -78,21 +79,17 @@ function DS_hook_trigger($hook_name){
 	}
 
 	$args = func_get_args();
-	$DS_hooks_return = array();
 
 	foreach ($DS_hooks[$hook_name] as $functions){
+		// sort by priority
 		krsort( $functions );
 		foreach ($functions as $function){
 			if (function_exists( $function )){
-				$DS_hooks_return[$function][] = call_user_func( $function , $args );
-			} else {
-				$DS_hooks_return[$function][] = 'Fail! This function doesn\t exists !';
+				$args = call_user_func( $function , $args );
 			}
 		}
 	}
 
-	return $DS_hooks_return;
+	return $args;
 }
-
-
 
