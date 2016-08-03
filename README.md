@@ -34,22 +34,23 @@ put hook.php somewhere in your projet and call it with a require or require_once
 or include_once (...) the soon as possible.
 
 ### Recommendations for the use
- - The function called via the hook will receive an array argument, I advise you to always 
-   return this tabeau and if several functions are attached to a hook, you do not break the chain.
-   ```php
-   function called_function( $args ){
-      $args['1'] = strtolower( $args['1'] );
-      return $args;
-   }
-   ```
- - The trigger function will return all arguments as an array, always check the status of the 
-   table that the trigger function will return before working on the result.
-   ```php
-   $returned = DS_hook_trigger('hook_test', $arg1 , $arg2 , $arg3 );
-   if (is_array($returned) && count( $returned ) === 4){
-      // seem's valid !
-   }
-   ```
+The function called via the hook will receive an array argument, I advise you to always 
+return this tabeau and if several functions are attached to a hook, you do not break the chain.
+```php
+function called_function( $args ){
+  $args['1'] = strtolower( $args['1'] );
+  return $args;
+}
+```
+
+The trigger function will return all arguments as an array, always check the status of the 
+table that the trigger function will return before working on the result.
+```php
+$returned = DS_hook_trigger('hook_test', $arg1 , $arg2 , $arg3 );
+if (is_array($returned) && count( $returned ) === 4){
+  // seem's valid !
+}
+```
 
    
 ### Set a hook trigger
