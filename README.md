@@ -30,9 +30,8 @@ need more test and improvements, so use it for fun/test/debug/small project...
 Coming soon
 
 ### install as simple php script
-put hook.php somewhere in your projet 
-and call it with a require or require_once or include or include_once (...)
-the soon as possible
+put hook.php somewhere in your projet and call it with a require or require_once or include 
+or include_once (...) the soon as possible.
 
 
 
@@ -64,11 +63,11 @@ Done !
 ```php
 // the function you want to call in last
 function function_to_call_1(){
-	var_dump('function_to_call_1() is called');
+	var_dump( 'function_to_call_1() is called' );
 }
 // the function you want to call in first
 function function_to_call_2(){
-	var_dump('function_to_call_2() is called');
+	var_dump( 'function_to_call_2() is called' );
 }
 
 // hooking the function function_to_call_1() with a priority at 1
@@ -80,16 +79,66 @@ DS_hook_push( 'after_config' , 'function_to_call_2' , 10 );
 Done !
 The function_to_call_2() has a higher priority than function_to_call_1(), so function_to_call_2() will be called before function_to_call_1()
 
+
+### pass arguments to the target function
+```php
+// your function with "$args"
+function function_to_call_3( $args ){
+	var_dump( 'function_to_call_3() is called' );
+	var_dump( $args );
+}
+
+DS_hook_push( 'arguments_exemple' , 'function_to_call_2' , 10 );
+
+$argument_1 = 'toto';
+$argument_2 = true;
+
+// set the hook trigger
+DS_hook_trigger('arguments_exemple' , $argument_1 , $argument_2 );
+```
+Done !
+
+This exemple will show something like that : 
+
+```php
+// the first var_dump
+string 'function_to_call_3() is called' (length=30)
+
+// the second var_dump
+array (size=3)
+  0 => string 'addon_urlrewrite' (length=16)
+  1 => string 'toto' (length=4)
+  2 => boolean true
+```
+
 ### The full exemple
 ```php
 // the function you want to call in last
 function function_to_call_1(){
 	var_dump('function_to_call_1() is called');
 }
+
 // the function you want to call in first
 function function_to_call_2(){
 	var_dump('function_to_call_2() is called');
 }
+
+// function to change a value
+function function_to_call_incrementing( $args ){
+	$args['1'] = $args['1'] + 1;
+	var_dump( 'function_to_call_incrementing() : '. $args['1'] );
+	return $args;
+}
+
+// function echo $a
+function echo_var_a( $args ){
+	echo 'var $a = '. $args['1'];
+}
+
+// hooking the function function_to_call_incrementing() with a priority at 1
+DS_hook_push( 'incrementing' , 'function_to_call_incrementing' , 1 );
+// increment again, for the fun
+DS_hook_push( 'incrementing' , 'function_to_call_incrementing' , 1 );
 
 // hooking the function function_to_call_1() with a priority at 1
 DS_hook_push( 'after_config' , 'function_to_call_1' , 1 );
@@ -97,13 +146,37 @@ DS_hook_push( 'after_config' , 'function_to_call_1' , 1 );
 // hooking the function function_to_call_2() with a priority at 10
 DS_hook_push( 'after_config' , 'function_to_call_2' , 10 );
 
+// hooking for showing $a
+DS_hook_push( 'echo' , 'echo_var_a' , 1 );
+
+
 
 // some code ...
 
 
-// call to your config file
-require 'path/to/your/config.php';
+
+// set config
+$config = array(
+		'dev' => true,
+		'coffee' => true
+	);
 
 // set a hook trigger
 DS_hook_trigger('after_config');
+
+
+$a = 0;
+
+// increment threw function_to_call_incrementing()
+$temp = DS_hook_trigger( 'incrementing' , $a );
+if (isset($temp['1'])){
+	$a = $temp['1'];
+}
+// remember ? We make 2 push for function_to_call_incrementing(), so ...
+var_dump( $a ); // will return 2 ;)
+
+// now, we can just show a echo ...
+$temp = DS_hook_trigger( 'echo' , $a );
+
+
 ```
