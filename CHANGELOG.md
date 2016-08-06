@@ -1,7 +1,15 @@
 /**
  * CHANGELOG
  * 
- * 0.02.002 2016-08-03
+ * 0.03.002 2016-08-03
+ *  - update hook_check() : 
+ *    add a counter test on args / array structure
+ * 
+ * 0.03.001 2016-08-03
+ *  - improvements
+ *  - add hook_check()
+ * 
+ * 0.03.000 2016-08-03
  *  - DS_hook_trigger() will now return arguments in an array
  *
  * 0.02.001 2016-08-03

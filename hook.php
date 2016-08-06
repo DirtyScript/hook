@@ -12,7 +12,7 @@
  * @author    RemRem <remrem@dirty-script.com>
  * @copyright Copyright (C) dirty-script.com,  All rights reserved.
  * @licence   MIT
- * @version   0.03.000 beta
+ * @version   0.03.002 beta
  * @link      Incoming
  * @link      https://github.com/DirtyScript/hook
  */
@@ -23,7 +23,7 @@
  * - more test
  * - push to composer
  * - improve README
- * - add a "exemple.php"
+ * - add an "exemple.php"
  */
 
 
@@ -63,22 +63,23 @@ function DS_hook_clean( $hook_name ){
  * the hook trigger
  * call the functions who have a call pushed
  * 
- * @param string $hook_name, the hook name
+ * @param string $hook_name, the hook name, required
+ * @param mixed ... , you can push all the params you want
  * @return array, the returns of the functions to call 
  */
-function DS_hook_trigger($hook_name){
+function DS_hook_trigger( $hook_name ){
 	global $DS_hooks;
 
-	if (!is_array($DS_hooks)){return false;}
+	$args = func_get_args();
 
-	if (!isset($DS_hooks[$hook_name])
+	if (!isset($DS_hooks)
+	 || !is_array($DS_hooks)
+	 || !isset($DS_hooks[$hook_name])
 	 || !is_array($DS_hooks[$hook_name])
 	 || count($DS_hooks[$hook_name]) < 1
 	){
-		return true;
+		return $args;
 	}
-
-	$args = func_get_args();
 
 	foreach ($DS_hooks[$hook_name] as $functions){
 		// sort by priority
@@ -93,3 +94,53 @@ function DS_hook_trigger($hook_name){
 	return $args;
 }
 
+
+/**
+ * check if the return of a hook seem's valid
+ * 
+ * @param string $hook_name  
+ * @param int    $args_count the total count of hook_trigger() args
+ * @param array  $args       the var returned by hook_trigger()
+ * @param bool   $must_die   if true, use DIE(), else return bool
+ * @return bool||die()
+ */
+function hook_check( $hook_name , $args_count , $args , $must_die = true ){
+	if (!is_array($args)){
+		if ($must_die){
+			die( 'hook : '. $hook_name .', must return an array.');
+		} else {
+			return false;
+		}
+	}
+
+	if ($args_count !== count($args)){
+		if ($must_die){
+			die( 'hook : '. $hook_name .', does not return the correct number of arguments.');
+		} else {
+			return false;
+		}
+	}
+
+	if (!isset($args['0'])
+	 || $args['0'] != $hook_name
+	){
+		if ($must_die){
+			die( 'hook : '. $hook_name .', the first element of the array must be the name of the hook.');
+		} else {
+			return false;
+		}
+	}
+
+	// check the args key
+	while( --$args_count ){
+		if (!isset($args[$args_count])){
+			if ($must_die){
+				die( 'hook : '. $hook_name .', missing $args['.$args_count.'] .');
+			} else {
+				return false;
+			}
+		}
+	}
+
+	return true;
+}
